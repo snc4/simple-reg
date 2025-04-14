@@ -8,6 +8,17 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Reg/Login App')
     .setDescription('Simple app for register/login/read users')
+    .addBearerAuth(
+      {
+        description: 'Enter jwt token',
+        name: 'Authorization',
+        type: 'http',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
+        in: 'Header',
+      },
+      'authorization',
+    )
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig);

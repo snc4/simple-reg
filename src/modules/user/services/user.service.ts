@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 
 import { User } from '@user/domain/entities';
 import { IUserRepository } from '@user/domain/interfaces/user.repo.interface';
+import { USER_REPOSITORY_DI_TOKEN } from '@user/domain/repositories/user';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY_DI_TOKEN)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async createUser(userDto: User) {
     const existingUser = await this.userRepository.findByEmail(userDto.email);
