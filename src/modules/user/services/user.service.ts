@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 
+import { UserDTO } from '@common/dto/user.dto';
 import { User } from '@user/domain/entities';
 import { IUserRepository } from '@user/domain/interfaces/user.repo.interface';
 import { USER_REPOSITORY_DI_TOKEN } from '@user/domain/repositories/user';
@@ -11,14 +12,15 @@ export class UserService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async createUser(userDto: User) {
-    const existingUser = await this.userRepository.findByEmail(userDto.email);
+  async createUser(userDto: UserDTO): Promise<User> {
+    return await this.userRepository.create(userDto);
+  }
 
-    if (existingUser) {
-      throw new Error(`user with email: ${userDto.email} exist!`);
-    }
+  async findByEmail(email: string): Promise<User | null> {
+    return await this.userRepository.findByEmail(email);
+  }
 
-    const user = await this.userRepository.create(userDto);
-    return user;
+  async getUsers(): Promise<User[]> {
+    return await this.userRepository.findAll();
   }
 }

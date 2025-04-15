@@ -1,25 +1,25 @@
-import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Post, Body } from '@nestjs/common';
 
 import { RegisterService } from './services/register.service';
-import { NewUserDTO } from '@common/dto/new-user.dto';
-import { JwtAuthGuard } from '@common/guards/jwt-auth.guard';
+import { AuthService } from './services/auth.service';
+
+import { RegisterReqDTO } from './dto/register.dto';
+import { LoginReqDTO, LoginResDTO } from './dto/login.dto';
 
 @Controller()
 export class AuthController {
-  constructor(private readonly registerService: RegisterService) {}
+  constructor(
+    private readonly registerService: RegisterService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('register')
-  async register(@Body() newUser: NewUserDTO) {
-    const { email, password } = newUser;
-    await this.registerService.registerUser(email, password);
+  async register(@Body() registerReqDto: RegisterReqDTO) {
+    await this.registerService.registerUser(registerReqDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('authorization')
   @Post('login')
-  async login(@Req() req: any) {
-    console.log(req.user);
-    return 'kek';
+  async login(@Body() loginReqDto: LoginReqDTO): Promise<LoginResDTO> {
+    return await this.authService.login(loginReqDto);
   }
 }

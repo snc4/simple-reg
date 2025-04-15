@@ -8,9 +8,7 @@ export class JwtAuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
-    console.log(req.headers);
     const auth = req.headers.authorization || '';
-    console.log(auth);
     const token = auth.split(' ')[1];
 
     if (!token) {

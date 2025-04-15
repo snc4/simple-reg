@@ -10,6 +10,6 @@ export class UserTypeormEntity implements IUser {
   @Column({ type: 'varchar', length: 320, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 255 })
   passwordHash: string;
 }
